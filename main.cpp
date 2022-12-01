@@ -1,6 +1,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 
 uint8_t bitswap(uint8_t x);
 
@@ -35,42 +35,69 @@ void uart_write(uint8_t x)
         "out %[usidr], %[lo_dr]\n\t"
 
         "out %[ddrb], %[ddrb_do_on]\n\t"
-
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
-
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
-
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
-
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
-
         "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
+
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
+
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
+
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
+
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
+
         "out %[usidr], %[hi_dr]\n\t"
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
-        "out %[usicr], %[clk]\n\t"        
-        "out %[usicr], %[clk_shift]\n\t"
+        "out %[usicr], %[shift]\n\t"        
+        "nop\n\t"
+        "nop\n\t"
+        "nop\n\t"
 
         "out %[ddrb], %[ddrb_do_off]\n\t"
         :
@@ -81,8 +108,7 @@ void uart_write(uint8_t x)
             [ddrb_do_off] "r" (ddrb_do_off),
             [lo_dr] "r" (lo_dr),
             [hi_dr] "r" (hi_dr),
-            [clk] "r" (_BV(USIWM0) | _BV(USITC)),
-            [clk_shift] "r" (_BV(USIWM0) | _BV(USITC) | _BV(USICLK))
+            [shift] "r" (_BV(USIWM0) | _BV(USICLK))
     );
 
     USICR = 0x00;

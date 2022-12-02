@@ -24,17 +24,8 @@ void uart_write(uint8_t x)
     auto const lo_dr = (swapped >> 2) | 0x80;
     auto const hi_dr = (swapped << 3) | 0x07;
 
-    auto const ddrb_do_on = DDRB | _BV(PB1) | _BV(PB2);
-    auto const ddrb_do_off = ddrb_do_on & ~(_BV(PB1) | _BV(PB2));
-
-    // No interrupts. I'm clocking out by cycle counting.
-    // Using three wire mode.
-    USICR = _BV(USIWM0);
-
     asm volatile(
         "out %[usidr], %[lo_dr]\n\t"
-
-        "out %[ddrb], %[ddrb_do_on]\n\t"
         "nop\n\t"
         "nop\n\t"
         "nop\n\t"
@@ -99,19 +90,14 @@ void uart_write(uint8_t x)
         "nop\n\t"
         "nop\n\t"
 
-        "out %[ddrb], %[ddrb_do_off]\n\t"
         :
         :   [usicr] "I" (_SFR_IO_ADDR(USICR)),
             [usidr] "I" (_SFR_IO_ADDR(USIDR)),
             [ddrb] "I" (_SFR_IO_ADDR(DDRB)),
-            [ddrb_do_on] "r" (ddrb_do_on),
-            [ddrb_do_off] "r" (ddrb_do_off),
             [lo_dr] "r" (lo_dr),
             [hi_dr] "r" (hi_dr),
             [shift] "r" (_BV(USIWM0) | _BV(USICLK))
     );
-
-    USICR = 0x00;
 }
 
 int main(void)
@@ -120,8 +106,9 @@ int main(void)
     // Set CKOUT fuse to put the CPU clock on a pin for measurement.
     OSCCAL -= 2;
 
-    // Set pull-ups for when the USI is disabled.
-    PORTB |= _BV(PB1) | _BV(PB2);
+    USIDR = 0xFF;
+    USICR = _BV(USIWM0);
+    DDRB |= _BV(PB1);
 
     while (true) {
         uart_write('h');

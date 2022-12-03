@@ -150,6 +150,8 @@ void uart_write_4mbaud(uint8_t x)
     // I need one register for intermediate values assigned
     // in the r16-r31 range. I'd love to use __tmp_reg__ but
     // it's r0 and invalid as an operand for 'out'.
+    // I need a second register for the stop data, since unlike
+    // the _2mbaud version I don't have time to reload [count].
     uint8_t count = 0;
     uint8_t const stop = 255;
     asm volatile(
@@ -193,9 +195,6 @@ void uart_write_8mbaud(uint8_t x)
 
     auto const swapped = bitswap(x);
 
-    // I need one register for intermediate values assigned
-    // in the r16-r31 range. I'd love to use __tmp_reg__ but
-    // it's r0 and invalid as an operand for 'out'.
     uint8_t const start = 0;
     uint8_t const stop = 255;
     asm volatile(
@@ -204,7 +203,6 @@ void uart_write_8mbaud(uint8_t x)
         "nop\n\t"
 
         // Data bits.
-        
         "out %[usidr],%[data]\n\t"
         "nop\n\t"
 
@@ -250,9 +248,6 @@ void uart_write_16mbaud(uint8_t x)
 
     auto const swapped = bitswap(x);
 
-    // I need one register for intermediate values assigned
-    // in the r16-r31 range. I'd love to use __tmp_reg__ but
-    // it's r0 and invalid as an operand for 'out'.
     uint8_t const start = 0;
     uint8_t const stop = 255;
     asm volatile(

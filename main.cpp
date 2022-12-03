@@ -69,6 +69,7 @@ __attribute__((used, section(".bitswap_table"))) uint8_t const table[] = {
 //     ldi r31,0
 //     ori r31,31
 //     lpm r24, Z
+//     ret
 static_assert(
     0 == (BITSWAP_TABLE & 0xff),
     "BITSWAP_TABLE is misaligned!");

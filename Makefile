@@ -1,7 +1,7 @@
 AVRDUDE_MCU   = attiny85
 GCC_MCU       = attiny85
 CLOCK         = 16000000
-BITSWAP_TABLE = 0x1f00
+BITSWAP_TABLE = 0x0500
 PROGRAMMER    = atmelice_isp
 PROGNAME      = attiny85-fast-uart-write
 SOURCES       = main.cpp
